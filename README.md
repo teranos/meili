@@ -37,7 +37,7 @@ Validates connectivity on initialize by listing indexes. A bad key surfaces imme
 
 ## Build
 
-QNTX's crates (`qntx-grpc`, `qntx-proto`) are a git dependency on [teranos/QNTX](https://github.com/teranos/QNTX) pinned to a tag in `Cargo.toml`; `Cargo.lock` holds the rev, and the flake reads it from there.
+QNTX's crates (`qntx-grpc`, `qntx-proto`) are a git dependency on [teranos/QNTX](https://github.com/teranos/QNTX) pinned to a tag in `Cargo.toml`; `Cargo.lock` holds the rev. The flake takes QNTX as its `qntx` input at the same tag, and refuses to build when that input's rev is not the one `Cargo.lock` pins.
 
 ```
 cargo build --release   # target/release/qntx-meili; needs protoc on PATH
