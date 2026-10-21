@@ -1,6 +1,6 @@
 //! Embedded MeiliSearch subprocess management.
 //!
-//! When `--embedded` is passed (or `embedded = true` in am.toml), the plugin
+//! When `--embedded` is passed (or `embedded` is `true` in the plugin's record, ADR-002), the plugin
 //! spawns a local MeiliSearch process on a random port with a temp data directory.
 //! The subprocess is killed on plugin shutdown.
 //!

@@ -4,23 +4,17 @@ Search provider plugin for QNTX. Routes SearchService gRPC RPCs to a MeiliSearch
 
 ## Configuration
 
-In `am.toml`:
-
-```toml
-[plugin]
-enabled = ["meili"]
-```
+The plugin is added, configured and enabled through its record on the node: [ADR-002](https://github.com/teranos/QNTX/blob/main/docs/adr/ADR-002-plugin-configuration.md). The keys below are the plugin's own, read from that record at initialize.
 
 ### Embedded mode
 
 Spawns a MeiliSearch subprocess — no external instance needed. Data persists in `~/.qntx/meili-data/` across restarts.
 
-```toml
-[meili]
-embedded = true
-# meili_bin = "meilisearch"           # default: looks up $PATH
-# meili_db_path = "~/.qntx/meili-data"  # default
+```json
+{"embedded": "true"}
 ```
+
+`meili_bin` (default: `meilisearch` on `$PATH`) and `meili_db_path` (default: `~/.qntx/meili-data`) are read beside it.
 
 Embedded uses `--master-key qntx-dev`, `--env development`, `--no-analytics`, `--max-indexing-memory 256MB`. The subprocess binds a random port and is killed on plugin shutdown.
 
@@ -28,10 +22,8 @@ Requires `meilisearch` binary on `$PATH` (e.g. `brew install meilisearch`).
 
 ### Remote mode
 
-```toml
-[meili]
-url = "http://localhost:7700"
-key = "your-master-key"
+```json
+{"url": "http://localhost:7700", "key": "your-master-key"}
 ```
 
 Validates connectivity on initialize by listing indexes. A bad key surfaces immediately in logs.
@@ -45,9 +37,12 @@ Validates connectivity on initialize by listing indexes. A bad key surfaces imme
 
 ## Build
 
+QNTX's crates (`qntx-grpc`, `qntx-proto`) are a git dependency on [teranos/QNTX](https://github.com/teranos/QNTX) pinned to a tag in `Cargo.toml`; `Cargo.lock` holds the rev, and the flake reads it from there.
+
 ```
-make install        # build release, install to ~/.qntx/plugins/, hot-restart if running
-nix build           # reproducible build via Nix flake
+cargo build --release   # target/release/qntx-meili; needs protoc on PATH
+make install            # build release, install to ~/.qntx/plugins/, hot-restart if running
+nix build               # reproducible build via Nix flake
 ```
 
 ## Limitations

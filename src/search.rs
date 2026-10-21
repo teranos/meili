@@ -31,7 +31,7 @@ impl MeiliSearchService {
     }
 
     /// (Re)configure the MeiliSearch client with URL and API key.
-    /// Called from initialize() with config from am.toml.
+    /// Called from initialize() with the config of the plugin's record (ADR-002).
     /// For remote mode, validates connectivity by listing indexes.
     /// For embedded mode, skips validation (wait_for_ready already confirmed the process).
     pub async fn configure(&self, url: &str, key: &str) -> Result<(), String> {

@@ -13,14 +13,20 @@
           inherit system;
         };
 
+        # QNTX's crates (qntx-grpc, qntx-proto, qntx-ats) are Cargo's git
+        # dependency on teranos/QNTX, pinned to one rev in Cargo.lock; nix
+        # fetches that rev with its own git fetcher, so no hash to keep here.
+        cargoLock = {
+          lockFile = ./Cargo.lock;
+          allowBuiltinFetchGit = true;
+        };
+
         qntx-meili = pkgs.rustPlatform.buildRustPackage {
           pname = "qntx-meili";
           version = self.rev or "dev";
-          src = ./../..;
+          src = ./.;
 
-          cargoLock = {
-            lockFile = ./../../Cargo.lock;
-          };
+          inherit cargoLock;
 
           buildInputs = with pkgs; [
             protobuf
@@ -31,19 +37,14 @@
             pkg-config
             protobuf
           ];
-
-          cargoBuildFlags = [ "-p" "qntx-meili" ];
-          cargoTestFlags = [ "-p" "qntx-meili" ];
         };
 
         qntx-meili-clippy = pkgs.rustPlatform.buildRustPackage {
           pname = "qntx-meili-clippy";
           version = self.rev or "dev";
-          src = ../../.;
+          src = ./.;
 
-          cargoLock = {
-            lockFile = ./../../Cargo.lock;
-          };
+          inherit cargoLock;
 
           nativeBuildInputs = with pkgs; [
             pkg-config
@@ -57,7 +58,7 @@
           ];
 
           buildPhase = ''
-            cargo clippy -p qntx-meili --all-targets -- -D warnings
+            cargo clippy --all-targets -- -D warnings
           '';
 
           installPhase = ''
