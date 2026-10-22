@@ -1,4 +1,4 @@
-# qntx-meili
+# meili
 
 Search provider plugin for QNTX. Routes SearchService gRPC RPCs to a MeiliSearch instance.
 
